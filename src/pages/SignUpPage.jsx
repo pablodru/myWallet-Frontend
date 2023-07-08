@@ -30,11 +30,11 @@ export default function SignUpPage() {
     <SingUpContainer>
       <form onSubmit={(e) => signUp(e)} >
         <MyWalletLogo />
-        <input placeholder="Nome" type="text" required value={name} onChange={(e) => setName(e.target.value)} />
-        <input placeholder="E-mail" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
-        <input placeholder="Senha" type="password" autoComplete="new-password" required value={password} onChange={(e) => setPassword(e.target.value)} />
-        <input placeholder="Confirme a senha" type="password" autoComplete="new-password" required value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
-        <button type="submit" >Cadastrar</button>
+        <input placeholder="Nome" type="text" required value={name} onChange={(e) => setName(e.target.value)} data-test="name"/>
+        <input placeholder="E-mail" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} data-test="email" />
+        <input placeholder="Senha" type="password" autoComplete="new-password" required value={password} onChange={(e) => setPassword(e.target.value)} data-test="password" />
+        <input placeholder="Confirme a senha" type="password" autoComplete="new-password" required value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} data-test="conf-password" />
+        <button type="submit" data-test="sign-up-submit" >Cadastrar</button>
       </form>
 
       <Link to='/' >

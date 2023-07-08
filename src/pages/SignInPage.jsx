@@ -39,7 +39,7 @@ export default function SignInPage() {
         setToken(res.data.token);
         setName(res.data.name);
 
-        localStorage.setItem('data', JSON.stringify({email, password}));
+        localStorage.setItem('data', JSON.stringify({email, password, token:res.data.token }));
 
         navigate('/home');
       })
@@ -50,9 +50,9 @@ export default function SignInPage() {
     <SingInContainer>
       <form onSubmit={(e) => signIn(e)} >
         <MyWalletLogo />
-        <input placeholder="E-mail" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
-        <input placeholder="Senha" type="password" autoComplete="new-password" required value={password} onChange={(e) => setPassword(e.target.value)} />
-        <button type="Submit" >Entrar</button>
+        <input placeholder="E-mail" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} data-test="email" />
+        <input placeholder="Senha" type="password" autoComplete="new-password" required value={password} onChange={(e) => setPassword(e.target.value)} data-test="password" />
+        <button type="Submit" data-test="sign-in-submit" >Entrar</button>
       </form>
 
       <Link to='/cadastro'>
