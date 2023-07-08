@@ -1,12 +1,10 @@
-import { Link, useNavigate } from "react-router-dom"
+import { Link } from "react-router-dom"
 import styled from "styled-components"
 import MyWalletLogo from "../components/MyWalletLogo"
 import { useState } from "react"
 import axios from "axios";
 
 export default function SignUpPage() {
-
-  const navigate = useNavigate();
 
   let [name, setName] = useState('');
   let [email, setEmail] = useState('');

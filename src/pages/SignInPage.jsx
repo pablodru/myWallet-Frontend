@@ -1,18 +1,61 @@
 import styled from "styled-components"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import MyWalletLogo from "../components/MyWalletLogo"
+import { useContext, useState } from "react";
+import axios from "axios";
+import { UserContext } from "../contexts/UserContext";
 
 export default function SignInPage() {
+
+  const navigate = useNavigate();
+
+  const { setToken, setName } = useContext(UserContext);
+
+  let [email, setEmail] = useState('');
+  let [password, setPassword] = useState('');
+
+  const URLPOST = `${import.meta.env.VITE_API_URL}/signin`;
+
+  if (localStorage.getItem('data')){
+    const data = JSON.parse(localStorage.getItem('data'));
+
+    axios.post(URLPOST, data)
+      .then(res => {
+        setToken(res.data.token);
+        setName(res.data.name);
+
+        navigate('/home');
+      })
+      .catch(err => alert(err.response.data.message));
+  }
+
+  function signIn(e){
+    e.preventDefault();
+
+    const body = { email, password };
+
+    axios.post(URLPOST, body)
+      .then(res => {
+        setToken(res.data.token);
+        setName(res.data.name);
+
+        localStorage.setItem('data', JSON.stringify({email, password}));
+
+        navigate('/home');
+      })
+      .catch(err => alert(err.response.data.message));
+  }
+
   return (
     <SingInContainer>
-      <form>
+      <form onSubmit={(e) => signIn(e)} >
         <MyWalletLogo />
-        <input placeholder="E-mail" type="email" />
-        <input placeholder="Senha" type="password" autocomplete="new-password" />
-        <button>Entrar</button>
+        <input placeholder="E-mail" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
+        <input placeholder="Senha" type="password" autoComplete="new-password" required value={password} onChange={(e) => setPassword(e.target.value)} />
+        <button type="Submit" >Entrar</button>
       </form>
 
-      <Link>
+      <Link to='/cadastro'>
         Primeira vez? Cadastre-se!
       </Link>
     </SingInContainer>
