@@ -1,47 +1,87 @@
 import styled from "styled-components"
 import { BiExit } from "react-icons/bi"
 import { AiOutlineMinusCircle, AiOutlinePlusCircle } from "react-icons/ai"
+import { useContext, useEffect, useState } from "react"
+import { UserContext } from "../contexts/UserContext"
+import { useNavigate } from "react-router-dom"
+import axios from "axios"
 
 export default function HomePage() {
+
+  const navigate = useNavigate();
+  const URLGET = `${import.meta.env.VITE_API_URL}/transation`;
+  const { name, token } = useContext(UserContext);
+  console.log(token)
+
+  const [transactions, setTransactions] = useState([]);
+  let [amount, setAmount] = useState(0);
+
+  function logout(){
+    localStorage.removeItem('data');
+    navigate('/');
+  }
+
+  useEffect(() => {
+    axios.get(URLGET, { headers: { 'Authorization': `Bearer ${token}` } })
+      .then(res => {
+        setTransactions(res.data);
+      })
+      .catch(err => console.log(err.response.data.message));
+  }, []);
+  
+  useEffect(() => {
+    setAmount(0)
+    transactions.forEach(transaction => {
+      if (transaction.type === 'in') {
+        setAmount(prevAmount => prevAmount + transaction.value);
+        console.log('somei: ', amount)
+      }
+      if (transaction.type === 'out') {
+        setAmount(prevAmount => prevAmount - transaction.value);
+        console.log('tirei: ', amount)
+      }
+    });
+  }, [transactions]);
+  
+  
+
+
   return (
     <HomeContainer>
       <Header>
-        <h1>Olá, Fulano</h1>
-        <BiExit />
+        <h1>Olá, {name}</h1>
+        <BiExit onClick={logout} />
       </Header>
 
       <TransactionsContainer>
         <ul>
-          <ListItemContainer>
-            <div>
-              <span>30/11</span>
-              <strong>Almoço mãe</strong>
-            </div>
-            <Value color={"negativo"}>120,00</Value>
-          </ListItemContainer>
 
-          <ListItemContainer>
-            <div>
-              <span>15/11</span>
-              <strong>Salário</strong>
-            </div>
-            <Value color={"positivo"}>3000,00</Value>
-          </ListItemContainer>
+          {transactions.map(item => {
+            return (
+            <ListItemContainer>
+              <div>
+                <span>{item.day}</span>
+                <strong>{item.description}</strong>
+              </div>
+              <Value color={item.type}>{item.value}</Value>
+            </ListItemContainer>
+          )})}
+          
         </ul>
 
         <article>
           <strong>Saldo</strong>
-          <Value color={"positivo"}>2880,00</Value>
+          <Value color={amount>0 ? 'in' : 'out'}>{amount}</Value>
         </article>
       </TransactionsContainer>
 
 
       <ButtonsContainer>
-        <button>
+        <button onClick={() => navigate('/nova-transacao/entrada')} >
           <AiOutlinePlusCircle />
           <p>Nova <br /> entrada</p>
         </button>
-        <button>
+        <button onClick={() => navigate('/nova-transacao/saida')} >
           <AiOutlineMinusCircle />
           <p>Nova <br />saída</p>
         </button>
@@ -105,7 +145,7 @@ const ButtonsContainer = styled.section`
 const Value = styled.div`
   font-size: 16px;
   text-align: right;
-  color: ${(props) => (props.color === "positivo" ? "green" : "red")};
+  color: ${(props) => (props.color === "in" ? "green" : "red")};
 `
 const ListItemContainer = styled.li`
   display: flex;
