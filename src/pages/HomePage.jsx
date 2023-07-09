@@ -16,6 +16,10 @@ export default function HomePage() {
   const [transactions, setTransactions] = useState([]);
   let [amount, setAmount] = useState(0);
 
+  if ( !localStorage.getItem('data') ){
+    navigate('/');
+  }
+
   function logout(){
     localStorage.removeItem('data');
     navigate('/');
@@ -61,7 +65,7 @@ export default function HomePage() {
             <ListItemContainer>
               <div>
                 <span>{item.day}</span>
-                <strong data-test="resgistry-name" >{item.description}</strong>
+                <strong data-test="registry-name" >{item.description}</strong>
               </div>
               <Value color={item.type} data-test="registry-amount">{item.value}</Value>
             </ListItemContainer>
@@ -71,7 +75,7 @@ export default function HomePage() {
 
         <article>
           <strong>Saldo</strong>
-          <Value color={amount>0 ? 'in' : 'out'} data-test="total-amount" >{amount}</Value>
+          <Value color={amount>0 ? 'in' : 'out'} data-test="total-amount" >{amount.toFixed(2).replace('.',',')}</Value>
         </article>
       </TransactionsContainer>
 

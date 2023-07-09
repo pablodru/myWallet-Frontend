@@ -16,7 +16,7 @@ export default function SignUpPage() {
   function signUp(e){
     e.preventDefault();
     
-    if (password !== confirmPassword) alert("As senhas não coincidem!");
+    if (password !== confirmPassword) return alert("As senhas não coincidem!");
 
     const body = { name, email, password };
 
