@@ -18,8 +18,9 @@ export default function SignInPage() {
 
   if (localStorage.getItem('data')){
     const data = JSON.parse(localStorage.getItem('data'));
+    const newobj = {email: data.email, password:data.password}
 
-    axios.post(URLPOST, data)
+    axios.post(URLPOST, newobj)
       .then(res => {
         setToken(res.data.token);
         setName(res.data.name);

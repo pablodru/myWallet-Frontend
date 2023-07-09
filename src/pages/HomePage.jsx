@@ -11,7 +11,6 @@ export default function HomePage() {
   const navigate = useNavigate();
   const URLGET = `${import.meta.env.VITE_API_URL}/transation`;
   const { name, token, setToken } = useContext(UserContext);
-  console.log(token)
 
   const [transactions, setTransactions] = useState([]);
   let [amount, setAmount] = useState(0);
@@ -27,12 +26,16 @@ export default function HomePage() {
 
   useEffect(() => {
 
+    const data = JSON.parse(localStorage.getItem('data'));
+
     if ( !token ) {
-      const data = localStorage.getItem('data');
+      console.log('data:        ', data.token)
       setToken(data.token);
     }
 
-    axios.get(URLGET, { headers: { 'Authorization': `Bearer ${token}` } })
+    console.log('é:    ', token)
+
+    axios.get(URLGET, { headers: { 'Authorization': `Bearer ${data.token}` } })
       .then(res => {
         setTransactions(res.data);
       })
@@ -44,11 +47,9 @@ export default function HomePage() {
     transactions.forEach(transaction => {
       if (transaction.type === 'in') {
         setAmount(prevAmount => prevAmount + transaction.value);
-        console.log('somei: ', amount)
       }
       if (transaction.type === 'out') {
         setAmount(prevAmount => prevAmount - transaction.value);
-        console.log('tirei: ', amount)
       }
     });
   }, [transactions]);
@@ -68,12 +69,12 @@ export default function HomePage() {
 
           {transactions.map(item => {
             return (
-            <ListItemContainer>
+            <ListItemContainer key={item._id} >
               <div>
                 <span>{item.day}</span>
                 <strong data-test="registry-name" >{item.description}</strong>
               </div>
-              <Value color={item.type} data-test="registry-amount">{item.value}</Value>
+              <Value color={item.type} data-test="registry-amount">{item.value.toFixed(2).replace('.',',')}</Value>
             </ListItemContainer>
           )})}
           
