@@ -15,10 +15,6 @@ export default function HomePage() {
   const [transactions, setTransactions] = useState([]);
   let [amount, setAmount] = useState(0);
 
-  if ( !localStorage.getItem('data') ){
-    navigate('/');
-  }
-
   function logout(){
     localStorage.removeItem('data');
     navigate('/');
@@ -27,14 +23,18 @@ export default function HomePage() {
   useEffect(() => {
 
     const data = JSON.parse(localStorage.getItem('data'));
+    console.log('data:        ', data)
 
-    if ( !token ) {
-      console.log('data:        ', data.token)
+    if ( !data || data === 'null' ) {
+      navigate('/');
+    }
+
+    if ( !token && data !== 'null' && data ) {
       setToken(data.token);
     }
 
-    console.log('é:    ', token)
-    const tokenToUse = token ? token : data.token
+    const tokenToUse = token ? token : (data ? data.token : undefined);
+
 
     axios.get(URLGET, { headers: { 'Authorization': `Bearer ${tokenToUse}` } })
       .then(res => {
