@@ -34,8 +34,9 @@ export default function HomePage() {
     }
 
     console.log('é:    ', token)
+    const tokenToUse = token ? token : data.token
 
-    axios.get(URLGET, { headers: { 'Authorization': `Bearer ${data.token}` } })
+    axios.get(URLGET, { headers: { 'Authorization': `Bearer ${tokenToUse}` } })
       .then(res => {
         setTransactions(res.data);
       })
