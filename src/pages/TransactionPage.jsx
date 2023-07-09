@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useContext, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components"
 import { UserContext } from "../contexts/UserContext";
@@ -10,13 +10,24 @@ export default function TransactionsPage() {
   const { tipo } = useParams();
   console.log(tipo)
 
-  const { token } = useContext(UserContext);
+  const { token, setToken } = useContext(UserContext);
 
   let [value, setValue] = useState('');
   let [description, setDescription] = useState('');
   let [type, setType] = useState((tipo==='entrada') ? 'in' : 'out')
 
   const URLPOST = `${import.meta.env.VITE_API_URL}/transation`;
+
+  if ( !localStorage.getItem('data') ){
+    navigate('/');
+  }
+
+  useEffect(() => {
+    if ( !token ) {
+      const data = localStorage.getItem('data');
+      setToken(data.token);
+    }
+  },[])
 
   function newTransaction(e) {
     e.preventDefault();

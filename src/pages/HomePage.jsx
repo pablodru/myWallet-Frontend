@@ -10,7 +10,7 @@ export default function HomePage() {
 
   const navigate = useNavigate();
   const URLGET = `${import.meta.env.VITE_API_URL}/transation`;
-  const { name, token } = useContext(UserContext);
+  const { name, token, setToken } = useContext(UserContext);
   console.log(token)
 
   const [transactions, setTransactions] = useState([]);
@@ -26,6 +26,12 @@ export default function HomePage() {
   }
 
   useEffect(() => {
+
+    if ( !token ) {
+      const data = localStorage.getItem('data');
+      setToken(data.token);
+    }
+
     axios.get(URLGET, { headers: { 'Authorization': `Bearer ${token}` } })
       .then(res => {
         setTransactions(res.data);
@@ -47,7 +53,7 @@ export default function HomePage() {
     });
   }, [transactions]);
   
-  
+  const finalAmount = amount.toFixed(2).replace('.',',');
 
 
   return (
@@ -75,7 +81,7 @@ export default function HomePage() {
 
         <article>
           <strong>Saldo</strong>
-          <Value color={amount>0 ? 'in' : 'out'} data-test="total-amount" >{amount.toFixed(2).replace('.',',')}</Value>
+          <Value color={amount>0 ? 'in' : 'out'} data-test="total-amount" >{finalAmount}</Value>
         </article>
       </TransactionsContainer>
 
