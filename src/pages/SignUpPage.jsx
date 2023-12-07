@@ -1,10 +1,12 @@
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import styled from "styled-components"
 import MyWalletLogo from "../components/MyWalletLogo"
 import { useState } from "react"
 import axios from "axios";
 
 export default function SignUpPage() {
+
+  const navigate = useNavigate();
 
   let [name, setName] = useState('');
   let [email, setEmail] = useState('');
@@ -21,7 +23,7 @@ export default function SignUpPage() {
     const body = { name, email, password };
 
     axios.post(URLPOST, body)
-      .then(res => {})
+      .then(res => navigate('/'))
       .catch(err => alert(err.response.data.message));
   }
 
