@@ -21,7 +21,7 @@ export default function SignUpPage() {
     const body = { name, email, password };
 
     axios.post(URLPOST, body)
-      .then(res => console.log(res))
+      .then(res => {})
       .catch(err => alert(err.response.data.message));
   }
 

@@ -23,7 +23,6 @@ export default function HomePage() {
   useEffect(() => {
 
     const data = JSON.parse(localStorage.getItem('data'));
-    console.log('data:        ', data)
 
     if ( !data || data === 'null' ) {
       navigate('/');

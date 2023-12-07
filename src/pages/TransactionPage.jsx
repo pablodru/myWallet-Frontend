@@ -8,7 +8,6 @@ export default function TransactionsPage() {
 
   const navigate = useNavigate();
   const { tipo } = useParams();
-  console.log(tipo)
 
   const { token, setToken } = useContext(UserContext);
 
@@ -35,7 +34,6 @@ export default function TransactionsPage() {
     const correctValue = Number(value.replace(',', '.'));
     
     const body = { value: correctValue, description, type };
-    console.log(body)
 
     axios.post(URLPOST, body, {headers:{'Authorization': `Bearer ${token}`}})
       .then(res => navigate('/home'))
